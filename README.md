@@ -3,7 +3,7 @@ GitHub Issues Powerpack
 
 This userscript provides the following more features than vanilla GitHub issues. You need [Greasemonkey][] on Firefox, or [Tempermonkey] on Chrome.
 
-[Install the script](gh-issues-powerpack.user.js)
+[Install the script](https://github.com/spoqa/gh-issues-powerpack/raw/master/gh-issues-powerpack.user.js)
 
 Distributed under [GPLv3][] or later.
 
