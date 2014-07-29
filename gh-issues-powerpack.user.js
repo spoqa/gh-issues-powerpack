@@ -7,9 +7,11 @@
 // @include     https://github.com/*/*/issues/created_by/*
 // @include     https://github.com/*/*/labels/*
 // @include     https://github.com/*/*/milestones/*
-// @version     1
+// @version     2
 // @grant       none
 // ==/UserScript==
+
+var VERSION = 2;
 
 function poll(f, ms) {
   var tFunc = function () {
@@ -21,12 +23,34 @@ function poll(f, ms) {
   tFunc();
 }
 
-function getCache(key) {
-  window.localStorage.getItem(key);
+function mangleKey(key) {
+  return 'ghip:' + VERSION + ':' + key;
 }
 
-function setCache(key, value) {
-  window.localStorage.setItem(key, value);
+function getCache(key) {
+  var encodedKey = mangleKey(key),
+      value = window.localStorage.getItem(encodedKey);
+  if (value === undefined || value === null) {
+    return;
+  }
+  var offset = value.indexOf('|'),
+      expired = window.parseInt(value.substr(0, offset));
+  if (expired < new Date().getTime()) {
+    window.localStorage.removeItem(encodedKey);
+    return;
+  }
+  return value.substr(offset + 1);
+}
+
+function setCache(key, value, lifetime) {
+  if (!lifetime) {
+    lifetime = 3600;
+  }
+  var expired = new Date().getTime() + lifetime;
+  window.localStorage.setItem(
+    mangleKey(key),
+    expired + '|' + value
+  );
 }
 
 function initialize() {
